@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Rename this file to source.xml and place it at publicly accessible directory at your server -->
+<source>
+
+    <server>
+        <title>Server title</title>
+        <realmlist>realmlist.example.com</realmlist>
+        <web>https://example.com</web>
+        <help>https://example.com/launcher</help> <!-- Site with tech information about launcher and tech support stuff -->
+        <guid>example.com</guid>                  <!-- Unique identifier -->
+    </server>
+
+    <launcher>
+        <currentVersion>2</currentVersion>                              <!-- Current version of launcher -->
+        <url>https://example.com/source/CustomClientLauncher.exe</url>  <!-- Publicly accessible launcher file -->
+        <allowUpdate>true</allowUpdate>                                 <!-- Update launcher automatically (WARNING - alpha functionality) -->
+    </launcher>
+
+    <patches>
+        <patch>
+            <file>patch-A.MPQ</file>                                 <!-- Title of patch -->
+            <url>https://example.com/source/patches/patch-A.MPQ</url> <!-- Link to publicly accessible patch file -->
+            <md5>35733b76fcf0f95a0d8240d1f36cc5c3</md5>              <!-- Checksum of current version of the file (will be set automatically, do not worry about it) -->
+            <optional>false</optional>                               <!-- True if the patch is optional, false it not -->
+        </patch>
+        <patch>
+            <file>patch-A.MPQ</file>                                 <!-- Title of patch -->
+            <url>https://example.com/source/patches/patch-A.MPQ</url> <!-- Link to publicly accessible patch file -->
+            <md5>35733b76fcf0f95a0d8240d1f36cc5c3</md5>              <!-- Checksum of current version of the file (will be set automatically, do not worry about it) -->
+            <optional>true</optional>                               <!-- True if the patch is optional, false it not -->
+        </patch>
+        <!-- If you have more patches, just copy the "patch" block and use it with another patch file -->
+    </patches>
+
+    <info>
+        <lastUpdate>2017-04-24 12:15:34</lastUpdate> <!-- Date of last changes to this file (will be set automatically, do not worry about it) -->
+    </info>
+
+</source>
