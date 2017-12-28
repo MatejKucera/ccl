@@ -10,16 +10,19 @@ using IniParser.Exceptions;
 using IniParser.Model;
 using CustomClientLauncher.Modules;
 using CustomClientLauncher.Tools;
+using NLog.Config;
+using NLog.Targets;
 
 namespace CustomClientLauncher
 {
     class App
     {
-        public static double VERSION = 2;
+        public static double VERSION = 3;
 
         // startup method, which starts the main thread and displays final error message
         static void Main(string[] args)
         {
+
             App app = new App();
             Boolean result = app.start();
             if (!result) {
@@ -30,9 +33,8 @@ namespace CustomClientLauncher
                 Console.WriteLine("Please check CustomClientLauncher.log file for more information.");
                 Console.WriteLine();
                 Console.WriteLine("Press ENTER to exit the launcher.");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
-
-            Console.ReadLine();
         }
 
         public Logger logger { get; private set; }
@@ -43,6 +45,7 @@ namespace CustomClientLauncher
         // main class for whole project, runs the sequence of logics
         public Boolean start() {
             logger = LogManager.GetCurrentClassLogger();
+            LogManager.Configuration = loggerConfiguration();
             logger.Info("Application started.");
 
             FileIniDataParser parser = new FileIniDataParser();
@@ -60,6 +63,7 @@ namespace CustomClientLauncher
             List<IModule> modules = new List<IModule>();
             modules.Add(new SourceModule());
             modules.Add(new WelcomeModule());
+            modules.Add(new SelfRenameModule());
             modules.Add(new SelfUpdateModule());
             modules.Add(new CheckModule());
             modules.Add(new RealmlistModule());
@@ -78,13 +82,25 @@ namespace CustomClientLauncher
                 }
             }
 
-            // finalize
             return true;
         }
 
         public string getSourceValue(string xpath)
         {
             return this.source.SelectSingleNode(xpath).InnerText;
+        }
+
+        public LoggingConfiguration loggerConfiguration()
+        {
+            var config = new LoggingConfiguration();
+            var fileTarget = new FileTarget();
+            config.AddTarget("file", fileTarget);
+            fileTarget.FileName = "${basedir}/launcher.log";
+            fileTarget.Layout = "${message}";
+            fileTarget.DeleteOldFileOnStartup = true;
+            var rule = new LoggingRule("*", LogLevel.Debug, fileTarget);
+            config.LoggingRules.Add(rule);
+            return config;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace CustomClientLauncher.Tools
             }
             Console.ForegroundColor = color;
             Console.Write("\n\r - " + message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void patchesInfo(string message, ConsoleColor color = ConsoleColor.Gray)
@@ -31,6 +32,7 @@ namespace CustomClientLauncher.Tools
             }
             Console.ForegroundColor = color;
             Console.Write("\n\r     - " + message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void result(string message, ConsoleColor color)
@@ -43,18 +45,21 @@ namespace CustomClientLauncher.Tools
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void resultNotice(string message = "need changes")
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void resultError(string message = "unknown Error")
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
     }

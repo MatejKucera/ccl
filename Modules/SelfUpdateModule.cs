@@ -12,8 +12,6 @@ namespace CustomClientLauncher.Modules
 {
     class SelfUpdateModule : IModule
     {
-        private static string CCL_EXE = "CustomClientLauncher.exe";
-        private static string CCL_EXE_TEMP = "CustomClientLauncher.exe_temp";
 
         private static string BATCH_UPDATER = "cclupdate.bat";
 
@@ -23,6 +21,9 @@ namespace CustomClientLauncher.Modules
 
             double currentVersion = App.VERSION;
             double availableVersion = Convert.ToDouble(app.source.SelectSingleNode("/source/launcher/currentVersion").InnerText);
+
+            String exeName = app.source.SelectSingleNode("/source/launcher/exe").InnerText;
+            String exeNameTemp = exeName + "_temp";
 
             // if there is no new version or allowUpdate in source file is set to false
             if (availableVersion == currentVersion || app.source.SelectSingleNode("/source/launcher/allowUpdate").InnerText.Equals("false"))
@@ -38,7 +39,7 @@ namespace CustomClientLauncher.Modules
             using (WebClient client = new WebClient())
             {
                 try { 
-                    client.DownloadFile(app.source.SelectSingleNode("/source/launcher/url").InnerText, SelfUpdateModule.CCL_EXE_TEMP);
+                    client.DownloadFile(app.source.SelectSingleNode("/source/launcher/url").InnerText, exeNameTemp);
                 }
                 catch (WebException exception)
                 {
@@ -50,24 +51,9 @@ namespace CustomClientLauncher.Modules
             Printer.info("Creating update script");
             int pid = Process.GetCurrentProcess().Id;
 
-            // delete script file if exists
-            if (File.Exists(SelfUpdateModule.BATCH_UPDATER))
-            {
-                File.Delete(SelfUpdateModule.BATCH_UPDATER);
-            }
+            BatchFactory.moverBatch(pid.ToString(), exeNameTemp, exeName, SelfUpdateModule.BATCH_UPDATER);
 
-            // create script file
-            String script = "";
-            script += "taskkill /F /PID "+pid.ToString() + "\r\n";
-            script += "move "+SelfUpdateModule.CCL_EXE_TEMP+" "+SelfUpdateModule.CCL_EXE+"\r\n";
-            script += SelfUpdateModule.CCL_EXE+"\r\n";
-            script += "del /F "+SelfUpdateModule.BATCH_UPDATER+"\r\n";
-            File.WriteAllText(SelfUpdateModule.BATCH_UPDATER,script);
-
-            // run script
-            Printer.info("This program will be terminated");
-            Process.Start(SelfUpdateModule.BATCH_UPDATER);
-
+            Console.ReadLine();
             return false;
         }
     }

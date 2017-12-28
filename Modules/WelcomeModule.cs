@@ -13,6 +13,7 @@ namespace CustomClientLauncher.Modules
         {
             // print welcome text
             //   source is already loaded, so it can be used
+            Console.Title = app.getSourceValue("/source/server/title");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(app.getSourceValue("/source/server/title"));
             Console.WriteLine(" - Custom Client Launcher, v" + App.VERSION);

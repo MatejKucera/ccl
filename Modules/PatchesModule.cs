@@ -65,14 +65,20 @@ namespace CustomClientLauncher.Modules
                 string currentChecksum = md5("Data\\" + filename);
 
                 // Current version of patch, no further activity
-                if (sourceChecksum == currentChecksum)
+                if (currentChecksum == null)
+                {
+
+                    Printer.resultNotice("unable to check (in use)");
+                    return;
+                }
+                else if (sourceChecksum == currentChecksum)
                 {
                     Printer.resultOk();
                     return;
                 }
                 else
                 {
-                    Printer.resultNotice(currentChecksum + "needs update");
+                    Printer.resultNotice("needs update");
                     this.download(filename, url);
                 }
             }
@@ -142,14 +148,22 @@ namespace CustomClientLauncher.Modules
             using (var md5 = new MD5CryptoServiceProvider())
             {
                 //File.ReadAllBytes(filename)
-                var file = File.Open(filename, FileMode.Open);
-                var buffer = md5.ComputeHash(file);
-                var sb = new StringBuilder();
-                for (int i = 0; i < buffer.Length; i++)
+                try
                 {
-                    sb.Append(buffer[i].ToString("x2"));
+                    var file = File.Open(filename, FileMode.Open);
+                    var buffer = md5.ComputeHash(file);
+                    var sb = new StringBuilder();
+                    for (int i = 0; i < buffer.Length; i++)
+                    {
+                        sb.Append(buffer[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
+                catch (IOException exception)
+                {
+                    return null;
+                }
+                
             }
         }
     }
